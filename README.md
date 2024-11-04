@@ -9,6 +9,7 @@ Welcome to the **C ++ File Repository**! Dive into my collection of C++ projects
 - **Lab Files** - Organized by lab number:
   - **Lab 3** (`Lab 3.cpp`, `LAb 3.txt`, `LAb 3.png`)
   - **Lab 9** (`lab9.cpp`, `Lab 9.txt`)
+  - **Matrix Multiplication** by using pass by pointer.
 - **Assignments** - Check out the source code for various assignments, like `ass11.cpp`.
 - **Extras** - Additional supporting files like `frame.h`.
 
