@@ -1,0 +1,214 @@
+//Name; Ganesh Prasad Jaishi
+// simple goffer game using Arrays
+#include <iostream>
+#include <time.h>
+using namespace std;
+
+const int ROWS = 10;
+const int COLS = 10;
+bool game_over = false;
+char field[ROWS][COLS];
+char secret[ROWS][COLS];
+int win_count = 0;
+
+void rules();
+void create_field(char arr[][COLS], int rows, int cols);
+void print_field(char arr[][COLS], int rows, int cols);
+void print_secret(char arr[][COLS], int rows, int cols);
+void choose();
+void reveal(int row, int col);
+void create_gopher();
+
+int main()
+{
+    srand(time(NULL));
+    rules();
+    create_field(field, ROWS, COLS);
+    create_gopher();
+
+    do
+    {
+        print_field(field, ROWS, COLS);
+        choose();
+         win_count += 1;
+
+    } while (game_over != true && win_count < 71);
+
+    if (game_over == true)
+    {
+        cout << " Game over! You choose a gopher" << endl;
+    }
+    if (win_count > 71)
+   {
+       cout << "Congrats, you win!" << endl;
+   }
+
+    else
+    {
+        cout << "Congratulations, you win!" << endl;
+    }
+
+    cout << "Press enter to exit." << endl;
+    cin.ignore();
+    cin.get();
+
+    return 0;
+}
+
+void rules()
+{
+    cout << "Welcome to gopher hunt!.. This is the simple game design to pass the leisure time. In order to play please enter rows and colums. ";
+}
+
+void create_field(char arr[][COLS], int rows, int cols)
+{
+    cout << "Generating field...\n\n";
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            arr[i][j] = '+';
+        }
+    }
+}
+
+void print_field(char arr[][COLS], int rows, int cols)
+{
+    cout << "  ";
+    for (int a = 1; a <= cols; a++)
+    {
+        cout << a << " ";
+    }
+    cout << endl;
+
+    for (int i = 0; i < rows; i++)
+    {
+        cout << i + 1 << " ";
+        for (int j = 0; j < cols; j++)
+        {
+            cout << arr[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+void print_secret(char arr[][COLS], int rows, int cols)
+{
+    cout << "  ";
+    for (int a = 1; a <= cols; a++)
+    {
+        cout << a << " ";
+    }
+    cout << endl;
+
+    for (int i = 0; i < rows; i++)
+    {
+        cout << i + 1 << " ";
+        for (int j = 0; j < cols; j++)
+        {
+            cout << arr[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+ void choose()
+{
+    int row = 0, col = 0;
+    cout << "Please enter row and column numbers separated by space: ";
+    cin >> row >> col;
+
+    if (row < 1 || row > ROWS || col < 1 || col > COLS)
+    {
+        cout << "Invalid row or column. Please try again." << endl;
+    }
+    else
+    {
+        reveal(row - 1, col - 1);
+    }
+}
+                                                                                                                       
+void reveal(int row, int col)
+{
+    // Check if the game is over
+    if (game_over)
+    {
+        cout << "The game is already over. Please start a new game." << endl;
+        return;
+    }
+    
+    // Check if the selected cell is valid
+    if (row < 0 || row >= ROWS || col < 0 || col >= COLS)
+    {
+        cout << "Invalid row or column. Please try again." << endl;
+        return;
+    }
+    
+    // Check if the selected cell has already been revealed
+    if (field[row][col] != '+')
+    {
+        cout << "This cell has already been revealed. Please choose another." << endl;
+        return;
+    }
+    
+    // Check if the selected cell has a gopher
+    if (secret[row][col] == 'G')
+    {
+        field[row][col] = 'X';
+        game_over = true;
+        cout << "Oh no! You uncovered a gopher. Game over." << endl;
+        return;
+    }
+    
+    // Count the number of adjacent cells with gophers
+    int count = 0;
+    for (int i = max(0, row - 1); i <= min(row + 1, ROWS - 1); i++)
+    {
+        for (int j = max(0, col - 1); j <= min(col + 1, COLS - 1); j++)
+        {
+            if (secret[i][j] == 'G')
+            {
+                count++;
+            }
+        }
+    }
+    
+    // Update the selected cell with the count of adjacent gophers
+    field[row][col] = count + '0';
+    
+    // If there are no adjacent gophers, reveal all adjacent cells
+    if (count == 0)
+    {
+        for (int i = max(0, row - 1); i <= min(row + 1, ROWS - 1); i++)
+        {
+            for (int j = max(0, col - 1); j <= min(col + 1, COLS - 1); j++)
+            {
+                if (field[i][j] == '+')
+                {
+                    reveal(i, j);
+                }
+            }
+        }
+    }
+}
+
+void create_gopher()
+{
+    int num_gophers = 10;
+    srand(time(NULL)); // initialize random seed
+
+    for (int i = 0; i < num_gophers; i++) {
+        int row = rand() % ROWS;
+        int col = rand() % COLS;
+
+        while (secret[row][col] == 'G') { // if this spot already has a gopher, generate new coordinates
+            row = rand() % ROWS;
+            col = rand() % COLS;
+        }
+
+        secret[row][col] = 'G';
+    }
+}
+
